@@ -1,6 +1,8 @@
 //Hi, here is the list of changes:
 //1. I changed the color theme of the game, and the shape of puck. More realistic.
-//2. The game restart once a player scores.
+//2. The game restart once a player scores 20 points.
+//3. The paddles grow longer if player scores (max twice the orginal size)
+
 
 // Scores
 var leftScore = 0;
@@ -19,7 +21,8 @@ var puck = {
 var leftY = 170;
 var rightY = 170;
 var playerWidth = 10;
-var playerHeight = 60;
+var playerLHeight = 60;
+var playerRHeight = 60;
 var playerSpeed = 10;
 
 function setup() {
@@ -49,9 +52,10 @@ function draw() {
   push();
   rectMode(CORNER);
   noStroke();
-  rect(-1, leftY, playerWidth, playerHeight, 60);
-  rect(width - playerWidth - 1, rightY, playerWidth, playerHeight, 60);
+  rect(-1, leftY, playerWidth, playerLHeight, 60);
+  rect(width - playerWidth - 1, rightY, playerWidth, playerRHeight, 60);
 	pop();
+  
   
   // Get user input
   if (keyIsDown(UP_ARROW)) {
@@ -71,14 +75,14 @@ function draw() {
   if (leftY < 0) {
     leftY = 0;
   }
-  if (leftY > height - playerHeight) {
-    leftY = height - playerHeight;
+  if (leftY > height - playerLHeight) {
+    leftY = height - playerLHeight;
   }
   if (rightY < 0) {
     rightY = 0;
   }
-  if (rightY > height - playerHeight) {
-    rightY = height - playerHeight;
+  if (rightY > height - playerRHeight) {
+    rightY = height - playerRHeight;
   }
 
   // Update the puck position
@@ -91,44 +95,45 @@ function draw() {
   }
   
   // Check if puck is hitting a paddle
-  if (puck.x < playerWidth && puck.y > leftY && puck.y < leftY + playerHeight) {
+  if (puck.x < playerWidth && puck.y > leftY && puck.y < leftY + playerLHeight) {
     puck.vx *= -1;
   }
-  if (puck.x > width - playerWidth && puck.y > rightY && puck.y < rightY + playerHeight) {
+  if (puck.x > width - playerWidth && puck.y > rightY && puck.y < rightY + playerRHeight) {
     puck.vx *= -1;
   }
 
   // Check if a player scored
   if (puck.x > width) {
     leftScore++
+    if (leftScore >= 3){
+    leftScore = 0;
+    rightScore = 0
+    }
+
     puck.x = width/2;
     puck.y = height/2;
+    puck.vx *= -1;
+    puck.vy *= -1;
+    playerLHeight += 10;
+    if (playerLHeight > 120) {
+    playerLHeight = 120;
+    }
   }
+  
   if (puck.x < 0) {
     rightScore++
+    if (rightScore >= 3){
+      leftScore = 0;
+      rightScore = 0;
+    }
     puck.x = width/2;
     puck.y = height/2;
-  }
-  //Player Scores point reminder
-  if (leftScore++){
-    push();
-    strokeWeight(2)
-    rectMode(CENTER);
-    rect(width/2, 11, 200, 20);
-    textStyle(BOLD);
-    textSize(15)
-    text("Left player scores a point!", width/2 + 32, 14, 250, 20);
-    pop();
-  }
-   if (rightScore++){
-   	push();
-    strokeWeight(2)
-    rectMode(CENTER);
-    rect(width/2, 11, 215, 20);
-    textStyle(BOLD);
-    textSize(15)
-    text("Right player scores a point!", width/2 + 26, 14, 250, 20);
-    pop();
+    puck.vx *= -1;
+    puck.vy *= -1;
+    playerRHeight += 10;
+     if (playerRHeight > 120) {
+    playerRHeight = 120;
+    }
   }
 }
   
