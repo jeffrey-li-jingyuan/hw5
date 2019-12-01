@@ -105,7 +105,7 @@ function draw() {
   // Check if a player scored
   if (puck.x > width) {
     leftScore++
-    if (leftScore >= 3){
+    if (leftScore >= 20){
     leftScore = 0;
     rightScore = 0
     }
@@ -122,7 +122,7 @@ function draw() {
   
   if (puck.x < 0) {
     rightScore++
-    if (rightScore >= 3){
+    if (rightScore >= 20){
       leftScore = 0;
       rightScore = 0;
     }
